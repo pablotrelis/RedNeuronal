@@ -1,4 +1,4 @@
-function myperceptron_AND_DNI
+function results=myperceptron_AND_DNI(lg,num_ent,num_test)
 %function myperceptron_AND_DNI
 % Funcion principal que realiza las funciones de
  %1) Creación de las variables para el banco de entrenamiento y banco de
@@ -13,9 +13,15 @@ function myperceptron_AND_DNI
 %Creamos entradas y salidas de entrenamiento para una funcion AND
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inicializamos las variables E1, E2 y SE ideales para entrenamiento
-lg=0; %lg=0 AND lg=1 XOR
-num_ent=5000;
-num_test=20;
+if nargin<1
+    lg=0; %lg=0 AND lg=1 XOR
+end
+if nargin<2
+    num_ent=5000;
+end
+if nargin<3
+    num_test=20;
+end
 posibilidades=[0 1];
 for ii=1:1:(num_ent+num_test)
     if rand()<=1/2
@@ -64,20 +70,22 @@ S_est=useperceptron(myperceptronT,[E1V;E2V]');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Calculamos y representamos el error cometido
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-error=mean(abs(SEV-S_est));
- 
-close all
-figure,
-plot(SEV,'ok','LineWidth',2),hold on
-plot(S_est,'xr','LineWidth',2)
-%set(gcf,'FontWeight','bold')
-set(gca,'FontSize',12) %# Fix font size of the text in the current axes 
-set(gca,'FontWeight','bold')  %# Fix Bold text in the current axes 
-xlabel('Number of test','FontWeight','bold')
-ylabel('Output values','FontWeight','bold')
-axis([-1 length(SEV)+1 -0.1 1.3])
-legend('Correct Values','Perceptron Output')
-title('Evaluation of Perceptron Ouput for an AND','FontWeight','bold')
+results.error=mean(abs(SEV-S_est));
+results.SEV=SEV;
+results.S_est=S_est;
+
+% close all
+% figure,
+% plot(SEV,'ok','LineWidth',2),hold on
+% plot(S_est,'xr','LineWidth',2)
+% %set(gcf,'FontWeight','bold')
+% set(gca,'FontSize',12) %# Fix font size of the text in the current axes 
+% set(gca,'FontWeight','bold')  %# Fix Bold text in the current axes 
+% xlabel('Number of test','FontWeight','bold')
+% ylabel('Output values','FontWeight','bold')
+% axis([-1 length(SEV)+1 -0.1 1.3])
+% legend('Correct Values','Perceptron Output')
+% title('Evaluation of Perceptron Ouput for an AND','FontWeight','bold')
  
 %%%%%%%%%%%%%
 % FUNCTIONS %
@@ -152,12 +160,12 @@ title('Evaluation of Perceptron Ouput for an AND','FontWeight','bold')
             for j=1:1:M
                 v=v+myperceptron.weights(j+1)*E(j);
             end
-            if v<0
-                out(i)=0;
-            else
-                out(i)=1;
-            end
-
+%             if v<0
+%                 out(i)=0;
+%             else
+%                 out(i)=1;
+%             end
+            out(i)=1/(1+exp(-v)); 
         end
     end
 

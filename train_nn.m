@@ -30,8 +30,7 @@ function [mynn]=train_nn(mynn,LR,input,output)
         mynn.weights(2,1)=mynn.weights(2,1)+LR*e2*mynn.bias(2);
         for j=1:1:M
             mynn.weights(2,j+1)=mynn.weights(2,j+1)+LR*e2*input(i,j);
-        end
-    
+        end  
     end
     
 end
