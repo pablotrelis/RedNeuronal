@@ -13,6 +13,7 @@ function myperceptron_AND_DNI
 %Creamos entradas y salidas de entrenamiento para una funcion AND
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inicializamos las variables E1, E2 y SE ideales para entrenamiento
+lg=0; %lg=0 AND lg=1 XOR
 num_ent=5000;
 num_test=20;
 posibilidades=[0 1];
@@ -27,7 +28,11 @@ for ii=1:1:(num_ent+num_test)
     else
         E2(ii)=posibilidades(2);
     end
-    SE(ii)=and(E1(ii),E2(ii));
+    if lg==0
+        SE(ii)=and(E1(ii),E2(ii));
+    else
+        SE(ii)=xor(E1(ii),E2(ii));
+    end
 end
 E1V=E1(num_ent+1:length(E1));
 E2V=E2(num_ent+1:length(E2));
