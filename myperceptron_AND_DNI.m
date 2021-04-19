@@ -1,4 +1,4 @@
-function results=myperceptron_AND_DNI(lg,num_ent,num_test)
+function [results,Vinputs]=myperceptron_AND_DNI(lg,num_ent,num_test)
 %function myperceptron_AND_DNI
 % Funcion principal que realiza las funciones de
  %1) Creación de las variables para el banco de entrenamiento y banco de
@@ -22,30 +22,26 @@ end
 if nargin<3
     num_test=20;
 end
-posibilidades=[0 1];
-for ii=1:1:(num_ent+num_test)
-    if rand()<=1/2
-        E1(ii)=posibilidades(1);
-    else
-        E1(ii)=posibilidades(2);
-    end
-    if rand()<=1/2
-        E2(ii)=posibilidades(1);
-    else
-        E2(ii)=posibilidades(2);
-    end
-    if lg==0
-        SE(ii)=and(E1(ii),E2(ii));
-    else
-        SE(ii)=xor(E1(ii),E2(ii));
-    end
+% Inicializamos las variables E1, E2 y SE ideales para entrenamiento
+VT=num_ent;                %numero de muestras de entrada
+NV=round(VT);           %aseguramos que VT sea un numero entero
+E1=round(rand(NV,1));   %vector de NV valores de entrada en pin 1
+E2=round(rand(NV,1));   %vector de NV valores de entrada en pin 2
+if lg==1
+SE=double(xor(E1,E2));   %vector salida ideal para las entradas E1 y E
+else
+SE=double(and(E1,E2));
 end
-E1V=E1(num_ent+1:length(E1));
-E2V=E2(num_ent+1:length(E2));
-SEV=SE(num_ent+1:length(SE));
-E1=E1(1:num_ent);
-E2=E2(1:num_ent);
-SE=SE(1:num_ent);
+%%%% Creamos entradas y salidas de validacion E1V, E2V, SEV para test
+NVV=num_test;
+E1V=round(rand(NVV,1));
+E2V=round(rand(NVV,1));
+if lg==1
+SEV=double(xor(E1V,E2V));
+else
+SEV=double(and(E1V,E2V));  
+end
+Vinputs=[E1V E2V];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Creamos entradas y salidas de validacion E1V, E2V, SEV para test
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -60,12 +56,12 @@ myperceptron=initialize_perceptron(2);
 % Entrenamos el perceptron para un LR, por defecto 0.7
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 LR=0.7;
-myperceptronT=train_perceptron(myperceptron,LR,[E1;E2]',SE);
+myperceptronT=train_perceptron(myperceptron,LR,[E1 E2],SE);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Evaluamos el perceptron
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-S_est=useperceptron(myperceptronT,[E1V;E2V]');
+S_est=useperceptron(myperceptronT,[E1V E2V]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Calculamos y representamos el error cometido

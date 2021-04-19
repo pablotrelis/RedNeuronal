@@ -1,4 +1,4 @@
-function results=mynn_XOR_DNI(num_ent,num_test)
+function [results,Vinputs]=mynn_XOR_DNI(num_ent,num_test)
 %function mynn_XOR_profesor_AND_profesor
 % Funcion principal que realiza las funciones de
  %1) Creación de las variables para el banco de entrenamiento y banco de
@@ -30,7 +30,7 @@ NVV=num_test;
 E1V=round(rand(NVV,1));
 E2V=round(rand(NVV,1));
 SEV=double(xor(E1V,E2V));
- 
+Vinputs=[E1V E2V];
 % Inicializamos un perceptron para 2 entradas %%%
 mynn=initialize_nn(2);
 % Entrenamos el perceptron para un LR, por defecto 0.7
